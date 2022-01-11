@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:system_vote/app/widgets/post/post_store.dart';
 
 class Post extends StatefulWidget {
   final String text;
@@ -8,18 +10,21 @@ class Post extends StatefulWidget {
 
   final bool isMoreLikded;
 
+  final String idPost;
+
   const Post({
     Key? key,
     required this.text,
     required this.isMoreLikded,
     required this.author,
+    required this.idPost,
   }) : super(key: key);
 
   @override
   _PostState createState() => _PostState();
 }
 
-class _PostState extends State<Post> {
+class _PostState extends ModularState<Post, PostStore> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -70,31 +75,44 @@ class _PostState extends State<Post> {
                       color: Colors.white,
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      const IconButton(
-                        icon: Icon(Icons.thumb_up, color: Colors.green),
-                        tooltip: 'Like',
-                        onPressed: null,
-                      ),
-                      const IconButton(
-                        icon: Icon(
-                          Icons.thumb_down,
-                          color: Colors.red,
+                  Observer(builder: (context) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.thumb_up,
+                            color: store.isLiked ? Colors.green : Colors.white,
+                          ),
+                          tooltip: 'Like',
+                          onPressed: () {
+                            store.addLike(widget.idPost);
+                          },
                         ),
-                        tooltip: 'Dislike',
-                        onPressed: null,
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.comment, color: Colors.white),
-                        tooltip: 'Comentário',
-                        onPressed: () {
-                          Modular.to.navigate('/comment');
-                        },
-                      ),
-                    ],
-                  ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.thumb_down,
+                            color: store.isDisliked ? Colors.red : Colors.white,
+                          ),
+                          tooltip: 'Dislike',
+                          onPressed: () {
+                            store.addDislike(widget.idPost);
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.comment,
+                            color: Colors.white,
+                          ),
+                          tooltip: 'Comentário',
+                          onPressed: () {
+                            Modular.to
+                                .navigate('/comment?idPost=${widget.idPost}');
+                          },
+                        ),
+                      ],
+                    );
+                  }),
                 ],
               ),
             ),

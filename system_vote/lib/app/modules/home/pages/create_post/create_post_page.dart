@@ -17,14 +17,12 @@ class _CreatePostState extends State<CreatePost> {
   Future<void> sendData() async {
     var dio = Dio();
     dynamic id = await SessionManager().get("id");
-    String idString = id.toString();
-    var formData = FormData.fromMap({
-      'idUser': idString,
-      'text': _textController.text,
-      'author': _authorController.text,
+
+    var response = await dio.post('http://10.0.2.2:3333/createPost', data: {
+      "text": _textController.text,
+      "author": _authorController.text,
+      "idUser": '$id',
     });
-    var response =
-        await dio.post('http://10.0.2.2:3333/createPost', data: formData);
     if (response.statusCode == 200) {
       Modular.to.navigate('/feed');
     }

@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:system_vote/app/modules/home/pages/create_comment_page.dart';
+import 'package:system_vote/app/modules/home/pages/comment/create_comment_page.dart';
 import 'package:system_vote/app/modules/home/pages/feed/feed_page.dart';
 import 'package:system_vote/app/modules/home/pages/feed/feed_store.dart';
 import 'package:system_vote/app/modules/home/pages/favorites/my_favorites_page.dart';
 import 'package:system_vote/app/modules/home/pages/my_topics/my_topics_page.dart';
 import 'package:system_vote/app/modules/home/pages/singup_page.dart';
+import 'package:system_vote/app/widgets/post/post_store.dart';
 import '../home/home_store.dart';
 import 'pages/create_post/create_post_page.dart';
-import 'pages/comment_page.dart';
+import 'pages/comment/comment_page.dart';
 
 import 'home_page.dart';
 
@@ -17,6 +18,7 @@ class HomeModule extends Module {
   final List<Bind> binds = [
     Bind((i) => HomeStore()),
     Bind((i) => FeedStore()),
+    Bind((i) => PostStore()),
   ];
 
   @override
@@ -37,12 +39,14 @@ class HomeModule extends Module {
       '/comment',
       child: (_, args) => CommentPage(
         key: UniqueKey(),
+        idPost: args.queryParams['idPost'],
       ),
     ),
     ChildRoute(
       '/create-comment',
       child: (_, args) => CreateCommentPage(
         key: UniqueKey(),
+        idPost: args.queryParams['idPost'],
       ),
     ),
     ChildRoute(

@@ -36,7 +36,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Container(
-                height: 280,
+                height: 350,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: const Color.fromRGBO(255, 72, 147, 1),

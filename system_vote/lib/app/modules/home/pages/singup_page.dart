@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -9,6 +10,23 @@ class SingUpPage extends StatefulWidget {
 }
 
 class _SingUpPageState extends State<SingUpPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+
+  Future<void> sendData() async {
+    var dio = Dio();
+
+    var response = await dio.post('http://10.0.2.2:3333/createUser', data: {
+      "name": _nameController.text,
+      "email": _emailController.text,
+      "password": _passwordController.text,
+    });
+    if (response.statusCode == 200) {
+      Modular.to.navigate('/login');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +52,7 @@ class _SingUpPageState extends State<SingUpPage> {
                       TextFormField(
                         cursorColor: Colors.white,
                         enableSuggestions: true,
+                        controller: _nameController,
                         style: const TextStyle(color: Colors.white),
                         keyboardType: TextInputType.emailAddress,
                         decoration: const InputDecoration(
@@ -59,6 +78,7 @@ class _SingUpPageState extends State<SingUpPage> {
                       TextFormField(
                         cursorColor: Colors.white,
                         enableSuggestions: true,
+                        controller: _emailController,
                         style: const TextStyle(color: Colors.white),
                         keyboardType: TextInputType.emailAddress,
                         decoration: const InputDecoration(
@@ -84,6 +104,7 @@ class _SingUpPageState extends State<SingUpPage> {
                       TextFormField(
                         cursorColor: Colors.white,
                         enableSuggestions: true,
+                        controller: _passwordController,
                         style: const TextStyle(color: Colors.white),
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
@@ -118,7 +139,9 @@ class _SingUpPageState extends State<SingUpPage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          sendData();
+                        },
                         child: const Text('Cadastrar'),
                       ),
                       Row(

@@ -1,29 +1,35 @@
 import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:system_vote/app/widgets/post/post.dart';
+import '../../../../widgets/comment.dart';
 import 'package:http/http.dart' as http;
 
-import './feed_store.dart';
+class CommentPage extends StatefulWidget {
+  final String? idPost;
 
-class FeedPage extends StatefulWidget {
-  const FeedPage({Key? key}) : super(key: key);
+  const CommentPage({
+    Key? key,
+    this.idPost,
+  }) : super(key: key);
 
   @override
-  _FeedPageState createState() => _FeedPageState();
+  State<CommentPage> createState() => _CommentPageState();
 }
 
-class _FeedPageState extends ModularState<FeedPage, FeedStore> {
+class _CommentPageState extends State<CommentPage> {
   late Future _futureData;
 
   @override
   void initState() {
-    _futureData = getPosts();
+    _futureData = getComments();
     super.initState();
   }
 
-  Future<List> getPosts() async {
-    var url = Uri.parse('http://10.0.2.2:3333/getAllPosts');
+  Future<List> getComments() async {
+    var url = Uri.parse(
+        'http://10.0.2.2:3333/getAllComments/${Modular.args.queryParams['idPost']}');
     var response = await http.get(url);
     return jsonDecode(response.body);
   }
@@ -33,42 +39,21 @@ class _FeedPageState extends ModularState<FeedPage, FeedStore> {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(69, 69, 77, 1),
       appBar: AppBar(
+        title: const Text('Comentários'),
         titleTextStyle: const TextStyle(
           color: Colors.white,
           fontSize: 20,
         ),
-        title: const Text('Feed'),
         backgroundColor: const Color.fromRGBO(255, 72, 147, 1),
         actions: [
           IconButton(
             icon: const Icon(
-              Icons.article,
+              Icons.arrow_back,
               color: Colors.white,
             ),
             onPressed: () {
-              Modular.to.navigate('/my-topics');
+              Modular.to.navigate('/feed');
             },
-            tooltip: 'Meus tópicos',
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.favorite,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Modular.to.navigate('/my-favorites');
-            },
-            tooltip: 'Meus favoritos',
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.exit_to_app,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              store.logout();
-            },
-            tooltip: 'Sair',
           ),
         ],
       ),
@@ -79,14 +64,9 @@ class _FeedPageState extends ModularState<FeedPage, FeedStore> {
             return ListView.builder(
                 itemCount: snapshot.data?.length,
                 itemBuilder: (context, index) {
-                  return Post(
+                  return Comment(
                     text: snapshot.data[index]['text'],
-                    isMoreLikded: snapshot.data[index]['countLike'] >
-                            snapshot.data[index]['countDislike']
-                        ? true
-                        : false,
                     author: snapshot.data[index]['author'],
-                    idPost: snapshot.data[index]['id'],
                   );
                 });
           } else {
@@ -98,9 +78,9 @@ class _FeedPageState extends ModularState<FeedPage, FeedStore> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Modular.to.navigate('/new-post');
+          Modular.to.navigate('/create-comment?idPost=${widget.idPost}');
         },
-        tooltip: 'Adicionar Post',
+        tooltip: 'Adicionar Cometários',
         child: const Icon(
           Icons.add,
           color: Colors.white,
