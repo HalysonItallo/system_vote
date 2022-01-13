@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:system_vote/shared/themes/theme.dart';
 
 import 'home_store.dart';
 
@@ -18,8 +19,9 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
 
   @override
   Widget build(BuildContext context) {
+    final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(69, 69, 77, 1),
+      backgroundColor: systemVoteTheme.black,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -32,27 +34,27 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                 height: 350,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: const Color.fromRGBO(255, 72, 147, 1),
+                  color: systemVoteTheme.primaryColor,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
                     children: [
                       TextFormField(
-                        cursorColor: Colors.white,
+                        cursorColor: systemVoteTheme.white,
                         controller: _emailController,
                         enableSuggestions: true,
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: systemVoteTheme.white),
                         keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'E-mail',
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             gapPadding: 10,
                           ),
                           labelStyle: TextStyle(
-                            color: Colors.white,
+                            color: systemVoteTheme.white,
                           ),
-                          contentPadding: EdgeInsets.all(10),
+                          contentPadding: const EdgeInsets.all(10),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -65,20 +67,20 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                         height: 10,
                       ),
                       TextFormField(
-                        cursorColor: Colors.white,
+                        cursorColor: systemVoteTheme.white,
                         controller: _passwordController,
                         enableSuggestions: true,
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: systemVoteTheme.white),
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Senha',
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             gapPadding: 10,
                           ),
                           labelStyle: TextStyle(
-                            color: Colors.white,
+                            color: systemVoteTheme.white,
                           ),
-                          contentPadding: EdgeInsets.all(10),
+                          contentPadding: const EdgeInsets.all(10),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -93,7 +95,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                       Observer(builder: (context) {
                         return Text(
                           store.isLogged ? '' : 'Verifique seu e-mail ou senha',
-                          style: const TextStyle(color: Colors.white),
+                          style: TextStyle(color: systemVoteTheme.white),
                         );
                       }),
                       Container(
@@ -101,7 +103,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
+                          primary: systemVoteTheme.white,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 30,
                             vertical: 15,

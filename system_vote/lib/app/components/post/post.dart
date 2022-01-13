@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:system_vote/app/components/post/post_store.dart';
+import 'package:system_vote/shared/themes/theme.dart';
 
 class Post extends StatefulWidget {
   final String text;
@@ -27,16 +28,16 @@ class Post extends StatefulWidget {
 class _PostState extends ModularState<Post, PostStore> {
   @override
   Widget build(BuildContext context) {
+    final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
     return SizedBox(
       width: 800,
       height: 350,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Container(
-          decoration: const BoxDecoration(
-            color: Color.fromRGBO(
-                255, 72, 147, 1), //new Color.fromRGBO(255, 0, 0, 0.0),
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          decoration: BoxDecoration(
+            color: systemVoteTheme.black, //new Color.fromRGBO(255, 0, 0, 0.0),
+            borderRadius: const BorderRadius.all(Radius.circular(20.0)),
           ),
           child: Center(
             child: Padding(
@@ -60,19 +61,19 @@ class _PostState extends ModularState<Post, PostStore> {
                     child: Text(
                       widget.text,
                       maxLines: 4,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: systemVoteTheme.white,
                       ),
                     ),
                   ),
                   Text(
                     'Autor: ${widget.author}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: systemVoteTheme.white,
                     ),
                   ),
                   Observer(builder: (context) {
@@ -100,9 +101,9 @@ class _PostState extends ModularState<Post, PostStore> {
                           },
                         ),
                         IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.comment,
-                            color: Colors.white,
+                            color: systemVoteTheme.white,
                           ),
                           tooltip: 'Comentário',
                           onPressed: () {

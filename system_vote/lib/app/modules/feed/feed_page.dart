@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:system_vote/app/components/post/post.dart';
 import 'package:http/http.dart' as http;
+import 'package:system_vote/shared/themes/theme.dart';
 
 import './feed_store.dart';
 
@@ -30,20 +31,21 @@ class _FeedPageState extends ModularState<FeedPage, FeedStore> {
 
   @override
   Widget build(BuildContext context) {
+    final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(69, 69, 77, 1),
+      backgroundColor: systemVoteTheme.black,
       appBar: AppBar(
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
+        titleTextStyle: TextStyle(
+          color: systemVoteTheme.white,
           fontSize: 20,
         ),
         title: const Text('Feed'),
-        backgroundColor: const Color.fromRGBO(255, 72, 147, 1),
+        backgroundColor: systemVoteTheme.primaryColor,
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.article,
-              color: Colors.white,
+              color: systemVoteTheme.white,
             ),
             onPressed: () {
               Modular.to.navigate('/my-topics');
@@ -51,9 +53,9 @@ class _FeedPageState extends ModularState<FeedPage, FeedStore> {
             tooltip: 'Meus tópicos',
           ),
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.favorite,
-              color: Colors.white,
+              color: systemVoteTheme.white,
             ),
             onPressed: () {
               Modular.to.navigate('/my-favorites');
@@ -61,9 +63,9 @@ class _FeedPageState extends ModularState<FeedPage, FeedStore> {
             tooltip: 'Meus favoritos',
           ),
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.exit_to_app,
-              color: Colors.white,
+              color: systemVoteTheme.white,
             ),
             onPressed: () {
               store.logout();
@@ -101,9 +103,9 @@ class _FeedPageState extends ModularState<FeedPage, FeedStore> {
           Modular.to.navigate('/new-post');
         },
         tooltip: 'Adicionar Post',
-        child: const Icon(
+        child: Icon(
           Icons.add,
-          color: Colors.white,
+          color: systemVoteTheme.white,
         ),
         backgroundColor: const Color.fromRGBO(255, 72, 147, 1),
       ),

@@ -22,27 +22,22 @@ class SystemVoteTheme {
 
   Color red = Colors.red;
   Color white = getColorFromHex("#FFFFFF");
-  Color primaryBlue = getColorFromHex("#2F80ED");
-  // get correct secondary blue
-  Color secondaryBlue = getColorFromHex("#2F80ED");
-  Color primaryGreen = getColorFromHex("#118F5D");
-  Color secondaryGreen = getColorFromHex("#68b92e");
-  Color deepBlue = getColorFromHex("#003399");
-  Color weakBlue = getColorFromHex("#EAEEF3");
+  Color black = getColorFromHex("#45454D");
+  Color primaryColor = getColorFromHex("#FF4893");
 
   ThemeData get theme => ThemeData().copyWith(
         colorScheme: ColorScheme(
           brightness: Brightness.light,
-          primary: primaryBlue,
-          secondary: primaryGreen,
+          primary: primaryColor,
+          secondary: black,
           background: white,
           error: red,
-          onPrimary: primaryBlue,
-          onSecondary: primaryGreen,
+          onPrimary: primaryColor,
+          onSecondary: black,
           onBackground: white,
           onError: red,
-          surface: primaryBlue,
-          onSurface: primaryBlue,
+          surface: primaryColor,
+          onSurface: primaryColor,
         ),
         textTheme: TextTheme(
           bodyText1: TextStyle(

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:system_vote/shared/themes/theme.dart';
 
 class SingUpPage extends StatefulWidget {
   const SingUpPage({Key? key}) : super(key: key);
@@ -13,6 +14,8 @@ class _SingUpPageState extends State<SingUpPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+
+  final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
 
   Future<void> sendData() async {
     var dio = Dio();
@@ -30,7 +33,7 @@ class _SingUpPageState extends State<SingUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(69, 69, 77, 1),
+      backgroundColor: systemVoteTheme.black,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -43,27 +46,27 @@ class _SingUpPageState extends State<SingUpPage> {
                 height: 300,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: const Color.fromRGBO(255, 72, 147, 1),
+                  color: systemVoteTheme.primaryColor,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
                     children: [
                       TextFormField(
-                        cursorColor: Colors.white,
+                        cursorColor: systemVoteTheme.white,
                         enableSuggestions: true,
                         controller: _nameController,
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: systemVoteTheme.white),
                         keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Nome',
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             gapPadding: 10,
                           ),
                           labelStyle: TextStyle(
-                            color: Colors.white,
+                            color: systemVoteTheme.white,
                           ),
-                          contentPadding: EdgeInsets.all(10),
+                          contentPadding: const EdgeInsets.all(10),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -76,20 +79,20 @@ class _SingUpPageState extends State<SingUpPage> {
                         height: 10,
                       ),
                       TextFormField(
-                        cursorColor: Colors.white,
+                        cursorColor: systemVoteTheme.white,
                         enableSuggestions: true,
                         controller: _emailController,
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: systemVoteTheme.white),
                         keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'E-mail',
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             gapPadding: 10,
                           ),
                           labelStyle: TextStyle(
-                            color: Colors.white,
+                            color: systemVoteTheme.white,
                           ),
-                          contentPadding: EdgeInsets.all(10),
+                          contentPadding: const EdgeInsets.all(10),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -102,20 +105,20 @@ class _SingUpPageState extends State<SingUpPage> {
                         height: 10,
                       ),
                       TextFormField(
-                        cursorColor: Colors.white,
+                        cursorColor: systemVoteTheme.white,
                         enableSuggestions: true,
                         controller: _passwordController,
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: systemVoteTheme.white),
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Senha',
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             gapPadding: 10,
                           ),
                           labelStyle: TextStyle(
-                            color: Colors.white,
+                            color: systemVoteTheme.white,
                           ),
-                          contentPadding: EdgeInsets.all(10),
+                          contentPadding: const EdgeInsets.all(10),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -129,7 +132,7 @@ class _SingUpPageState extends State<SingUpPage> {
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
+                          primary: systemVoteTheme.white,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 30,
                             vertical: 15,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:system_vote/shared/themes/theme.dart';
 
 class Comment extends StatefulWidget {
   final String text;
@@ -16,6 +18,7 @@ class Comment extends StatefulWidget {
 }
 
 class _CommentState extends State<Comment> {
+  final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -24,10 +27,10 @@ class _CommentState extends State<Comment> {
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Container(
-          decoration: const BoxDecoration(
-            color: Color.fromRGBO(
-                255, 72, 147, 1), //new Color.fromRGBO(255, 0, 0, 0.0),
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          decoration: BoxDecoration(
+            color: systemVoteTheme
+                .primaryColor, //new Color.fromRGBO(255, 0, 0, 0.0),
+            borderRadius: const BorderRadius.all(Radius.circular(20.0)),
           ),
           child: Center(
             child: Padding(
@@ -40,19 +43,19 @@ class _CommentState extends State<Comment> {
                     child: Text(
                       widget.text,
                       maxLines: 4,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: systemVoteTheme.white,
                       ),
                     ),
                   ),
                   Text(
                     'Autor: ${widget.author}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: systemVoteTheme.white,
                     ),
                   ),
                 ],

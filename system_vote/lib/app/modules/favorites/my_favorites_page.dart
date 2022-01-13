@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart' as http;
+import 'package:system_vote/shared/themes/theme.dart';
 
 class MyFavoritePage extends StatefulWidget {
   const MyFavoritePage({Key? key}) : super(key: key);
@@ -28,20 +29,21 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
 
   @override
   Widget build(BuildContext context) {
+    final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(69, 69, 77, 1),
+      backgroundColor: systemVoteTheme.black,
       appBar: AppBar(
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
+        titleTextStyle: TextStyle(
+          color: systemVoteTheme.white,
           fontSize: 20,
         ),
         title: const Text('Meus Favoritos'),
         backgroundColor: const Color.fromRGBO(255, 72, 147, 1),
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.article,
-              color: Colors.white,
+              color: systemVoteTheme.white,
             ),
             onPressed: () {
               Modular.to.navigate('/my-topics');
@@ -49,9 +51,9 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
             tooltip: 'Meus tópicos',
           ),
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.favorite,
-              color: Colors.white,
+              color: systemVoteTheme.white,
             ),
             onPressed: () {
               Modular.to.navigate('/my-favorites');
@@ -59,9 +61,9 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
             tooltip: 'Meus favoritos',
           ),
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back,
-              color: Colors.white,
+              color: systemVoteTheme.white,
             ),
             onPressed: () {
               Modular.to.navigate('/feed');
@@ -85,11 +87,11 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
                           child: Padding(
                             padding: const EdgeInsets.all(20),
                             child: Container(
-                              decoration: const BoxDecoration(
-                                color: Color.fromRGBO(255, 72, 147,
-                                    1), //new Color.fromRGBO(255, 0, 0, 0.0),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
+                              decoration: BoxDecoration(
+                                color: systemVoteTheme
+                                    .primaryColor, //new Color.fromRGBO(255, 0, 0, 0.0),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(20.0)),
                               ),
                               child: Center(
                                 child: Padding(
@@ -111,19 +113,19 @@ class _MyFavoritePageState extends State<MyFavoritePage> {
                                         child: Text(
                                           snapshot.data[index]['text'],
                                           maxLines: 4,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 17,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white,
+                                            color: systemVoteTheme.white,
                                           ),
                                         ),
                                       ),
                                       Text(
                                         snapshot.data[index]['author'],
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                                          color: systemVoteTheme.white,
                                         ),
                                       ),
                                     ],

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:system_vote/shared/themes/theme.dart';
 
 class CreateCommentPage extends StatefulWidget {
   final String? idPost;
@@ -30,20 +31,21 @@ class _CreateCommentPageState extends State<CreateCommentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(69, 69, 77, 1),
+      backgroundColor: systemVoteTheme.black,
       appBar: AppBar(
         title: const Text('Criar Comentário'),
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
+        titleTextStyle: TextStyle(
+          color: systemVoteTheme.white,
           fontSize: 20,
         ),
-        backgroundColor: const Color.fromRGBO(255, 72, 147, 1),
+        backgroundColor: systemVoteTheme.primaryColor,
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back,
-              color: Colors.white,
+              color: systemVoteTheme.white,
             ),
             onPressed: () {
               Modular.to.navigate('/comment');
@@ -58,28 +60,28 @@ class _CreateCommentPageState extends State<CreateCommentPage> {
             height: 350,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: const Color.fromRGBO(255, 72, 147, 1),
+              color: systemVoteTheme.primaryColor,
             ),
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
                   TextFormField(
-                    cursorColor: Colors.white,
+                    cursorColor: systemVoteTheme.white,
                     enableSuggestions: true,
                     controller: _commentController,
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: systemVoteTheme.white),
                     maxLines: 4,
                     keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Comentário',
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         gapPadding: 10,
                       ),
                       labelStyle: TextStyle(
-                        color: Colors.white,
+                        color: systemVoteTheme.white,
                       ),
-                      contentPadding: EdgeInsets.all(10),
+                      contentPadding: const EdgeInsets.all(10),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -92,20 +94,20 @@ class _CreateCommentPageState extends State<CreateCommentPage> {
                     height: 20,
                   ),
                   TextFormField(
-                    cursorColor: Colors.white,
+                    cursorColor: systemVoteTheme.white,
                     enableSuggestions: true,
                     controller: _authorController,
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: systemVoteTheme.white),
                     keyboardType: TextInputType.text,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Autor',
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         gapPadding: 10,
                       ),
                       labelStyle: TextStyle(
-                        color: Colors.white,
+                        color: systemVoteTheme.white,
                       ),
-                      contentPadding: EdgeInsets.all(10),
+                      contentPadding: const EdgeInsets.all(10),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {

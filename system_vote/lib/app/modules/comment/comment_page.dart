@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart' as http;
 import 'package:system_vote/app/components/comment.dart';
+import 'package:system_vote/shared/themes/theme.dart';
 
 class CommentPage extends StatefulWidget {
   final String? idPost;
@@ -34,20 +35,21 @@ class _CommentPageState extends State<CommentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(69, 69, 77, 1),
+      backgroundColor: systemVoteTheme.black,
       appBar: AppBar(
         title: const Text('Comentários'),
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
+        titleTextStyle: TextStyle(
+          color: systemVoteTheme.white,
           fontSize: 20,
         ),
-        backgroundColor: const Color.fromRGBO(255, 72, 147, 1),
+        backgroundColor: systemVoteTheme.primaryColor,
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back,
-              color: Colors.white,
+              color: systemVoteTheme.white,
             ),
             onPressed: () {
               Modular.to.navigate('/feed');
@@ -79,9 +81,9 @@ class _CommentPageState extends State<CommentPage> {
           Modular.to.navigate('/create-comment?idPost=${widget.idPost}');
         },
         tooltip: 'Adicionar Cometários',
-        child: const Icon(
+        child: Icon(
           Icons.add,
-          color: Colors.white,
+          color: systemVoteTheme.white,
         ),
         backgroundColor: const Color.fromRGBO(255, 72, 147, 1),
       ),
