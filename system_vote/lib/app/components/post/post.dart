@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:system_vote/app/widgets/post/post_store.dart';
+import 'package:system_vote/app/components/post/post_store.dart';
 
 class Post extends StatefulWidget {
   final String text;

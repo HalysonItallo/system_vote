@@ -1,21 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../home/home_store.dart';
+import 'singup_page.dart';
 
-import 'home_page.dart';
-
-class HomeModule extends Module {
+class SingUpModule extends Module {
   @override
-  final List<Bind> binds = [
-    Bind((i) => HomeStore()),
-  ];
+  final List<Bind> binds = [];
 
   @override
   final List<ModularRoute> routes = [
     ChildRoute(
       Modular.initialRoute,
-      child: (_, args) => HomePage(
+      child: (_, args) => SingUpPage(
         key: UniqueKey(),
       ),
     ),

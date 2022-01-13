@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import '../../../../widgets/comment.dart';
 import 'package:http/http.dart' as http;
+import 'package:system_vote/app/components/comment.dart';
 
 class CommentPage extends StatefulWidget {
   final String? idPost;

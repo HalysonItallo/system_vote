@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_session_manager/flutter_session_manager.dart';
 
 class CreateCommentPage extends StatefulWidget {
   final String? idPost;

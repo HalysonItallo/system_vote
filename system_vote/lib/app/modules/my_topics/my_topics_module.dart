@@ -1,21 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../home/home_store.dart';
+import 'my_topics_page.dart';
 
-import 'home_page.dart';
-
-class HomeModule extends Module {
+class MyTopicsModule extends Module {
   @override
-  final List<Bind> binds = [
-    Bind((i) => HomeStore()),
-  ];
+  final List<Bind> binds = [];
 
   @override
   final List<ModularRoute> routes = [
     ChildRoute(
       Modular.initialRoute,
-      child: (_, args) => HomePage(
+      child: (_, args) => MyTopicsPage(
         key: UniqueKey(),
       ),
     ),

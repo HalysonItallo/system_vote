@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:system_vote/app/widgets/post/post.dart';
+import 'package:system_vote/app/components/post/post.dart';
 import 'package:http/http.dart' as http;
 
 import './feed_store.dart';

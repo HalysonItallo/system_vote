@@ -17,13 +17,6 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
   final TextEditingController _passwordController = TextEditingController();
 
   @override
-  void dispose() {
-    _passwordController.dispose();
-    _emailController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(69, 69, 77, 1),
