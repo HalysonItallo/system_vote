@@ -1,7 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:system_vote/app/models/entities/post_model.dart';
+import 'package:system_vote/app/repository/post_repository.dart';
 import 'package:system_vote/shared/themes/theme.dart';
 
 class CreatePost extends StatefulWidget {
@@ -14,24 +14,11 @@ class CreatePost extends StatefulWidget {
 class _CreatePostState extends State<CreatePost> {
   final TextEditingController _textController = TextEditingController();
   final TextEditingController _authorController = TextEditingController();
-
-  Future<void> sendData() async {
-    var dio = Dio();
-    dynamic id = await SessionManager().get("id");
-
-    var response = await dio.post('http://10.0.2.2:3333/createPost', data: {
-      "text": _textController.text,
-      "author": _authorController.text,
-      "idUser": '$id',
-    });
-    if (response.statusCode == 200) {
-      Modular.to.navigate('/feed');
-    }
-  }
+  final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
+  final PostRepository postRepository = Modular.get<PostRepository>();
 
   @override
   Widget build(BuildContext context) {
-    final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
     return Scaffold(
       backgroundColor: systemVoteTheme.black,
       appBar: AppBar(
@@ -131,8 +118,16 @@ class _CreatePostState extends State<CreatePost> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    onPressed: () {
-                      sendData();
+                    onPressed: () async {
+                      bool result = await postRepository.createPost(
+                        PostModel(
+                          text: _textController.text,
+                          author: _authorController.text,
+                        ),
+                      );
+                      if (result) {
+                        Modular.to.navigate('/feed/');
+                      }
                     },
                     child: const Text('Criar Post'),
                   )

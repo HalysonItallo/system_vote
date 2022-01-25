@@ -19,9 +19,9 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
 
   @override
   Widget build(BuildContext context) {
-    final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
+    final SystemVoteTheme _systemVoteTheme = Modular.get<SystemVoteTheme>();
     return Scaffold(
-      backgroundColor: systemVoteTheme.black,
+      backgroundColor: _systemVoteTheme.black,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -34,17 +34,17 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                 height: 350,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: systemVoteTheme.primaryColor,
+                  color: _systemVoteTheme.primaryColor,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(
                     children: [
                       TextFormField(
-                        cursorColor: systemVoteTheme.white,
+                        cursorColor: _systemVoteTheme.white,
                         controller: _emailController,
                         enableSuggestions: true,
-                        style: TextStyle(color: systemVoteTheme.white),
+                        style: TextStyle(color: _systemVoteTheme.white),
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           labelText: 'E-mail',
@@ -52,7 +52,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                             gapPadding: 10,
                           ),
                           labelStyle: TextStyle(
-                            color: systemVoteTheme.white,
+                            color: _systemVoteTheme.white,
                           ),
                           contentPadding: const EdgeInsets.all(10),
                         ),
@@ -67,10 +67,10 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                         height: 10,
                       ),
                       TextFormField(
-                        cursorColor: systemVoteTheme.white,
+                        cursorColor: _systemVoteTheme.white,
                         controller: _passwordController,
                         enableSuggestions: true,
-                        style: TextStyle(color: systemVoteTheme.white),
+                        style: TextStyle(color: _systemVoteTheme.white),
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           labelText: 'Senha',
@@ -78,7 +78,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                             gapPadding: 10,
                           ),
                           labelStyle: TextStyle(
-                            color: systemVoteTheme.white,
+                            color: _systemVoteTheme.white,
                           ),
                           contentPadding: const EdgeInsets.all(10),
                         ),
@@ -94,33 +94,38 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
                       ),
                       Observer(builder: (context) {
                         return Text(
-                          store.isLogged ? '' : 'Verifique seu e-mail ou senha',
-                          style: TextStyle(color: systemVoteTheme.white),
+                          store.validity ? '' : 'Verifique seu e-mail ou senha',
+                          style: TextStyle(color: _systemVoteTheme.white),
                         );
                       }),
                       Container(
                         height: 20,
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: systemVoteTheme.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 30,
-                            vertical: 15,
+                      Builder(builder: (context) {
+                        return ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: _systemVoteTheme.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 30,
+                              vertical: 15,
+                            ),
+                            textStyle: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          textStyle: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        onPressed: () {
-                          store.getLogin(
-                            _emailController.text,
-                            _passwordController.text,
-                          );
-                        },
-                        child: const Text('Entrar'),
-                      ),
+                          onPressed: () async {
+                            bool result = await store.getLogin(
+                              _emailController.text,
+                              _passwordController.text,
+                            );
+                            if (result) {
+                              Modular.to.navigate('/feed/');
+                            }
+                          },
+                          child: const Text('Entrar'),
+                        );
+                      }),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [

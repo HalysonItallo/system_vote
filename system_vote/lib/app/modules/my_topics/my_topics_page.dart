@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_session_manager/flutter_session_manager.dart';
-import 'package:http/http.dart' as http;
+import 'package:system_vote/app/repository/post_repository.dart';
 import 'package:system_vote/shared/themes/theme.dart';
 
 class MyTopicsPage extends StatefulWidget {
@@ -14,25 +11,11 @@ class MyTopicsPage extends StatefulWidget {
 }
 
 class _MyTopicsPageState extends State<MyTopicsPage> {
-  late Future _futureData;
-
-  @override
-  void initState() {
-    _futureData = getMyPosts();
-    super.initState();
-  }
-
-  Future<List> getMyPosts() async {
-    dynamic id = await SessionManager().get("id");
-    var url = Uri.parse('http://10.0.2.2:3333/getMyPosts/$id');
-    var response = await http.get(url);
-    return jsonDecode(response.body);
-  }
+  final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
+  final PostRepository postRepository = Modular.get<PostRepository>();
 
   @override
   Widget build(BuildContext context) {
-    final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
-
     return Scaffold(
       backgroundColor: systemVoteTheme.black,
       appBar: AppBar(
@@ -49,7 +32,7 @@ class _MyTopicsPageState extends State<MyTopicsPage> {
               color: systemVoteTheme.white,
             ),
             onPressed: () {
-              Modular.to.navigate('/my-topics');
+              Modular.to.navigate('/my-topics/');
             },
             tooltip: 'Meus tópicos',
           ),
@@ -59,7 +42,7 @@ class _MyTopicsPageState extends State<MyTopicsPage> {
               color: systemVoteTheme.white,
             ),
             onPressed: () {
-              Modular.to.navigate('/my-favorites');
+              Modular.to.navigate('/my-favorites/');
             },
             tooltip: 'Meus favoritos',
           ),
@@ -69,70 +52,96 @@ class _MyTopicsPageState extends State<MyTopicsPage> {
               color: systemVoteTheme.white,
             ),
             onPressed: () {
-              Modular.to.navigate('/feed');
+              Modular.to.navigate('/feed/');
             },
             tooltip: 'Voltar',
           ),
         ],
       ),
       body: FutureBuilder(
-        future: _futureData,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-                itemCount: snapshot.data?.length,
-                itemBuilder: (context, index) {
-                  return SizedBox(
-                    width: 800,
-                    height: 350,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: systemVoteTheme
-                              .primaryColor, //new Color.fromRGBO(255, 0, 0, 0.0),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(20.0)),
-                        ),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                SizedBox(
-                                  height: 150,
-                                  child: Text(
-                                    snapshot.data[index]['text'],
-                                    maxLines: 4,
+        future: postRepository.getMyPosts(),
+        builder: (_, AsyncSnapshot snapshot) {
+          return ListView.builder(
+            itemCount: snapshot.data?.length,
+            itemBuilder: (context, index) {
+              bool emptyData = snapshot.data.toString().compareTo("[]") == 0;
+
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+
+                case ConnectionState.active:
+
+                case ConnectionState.waiting:
+                  return const SizedBox(
+                    height: 400,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                case ConnectionState.done:
+                  if (snapshot.hasData && !emptyData) {
+                    var data = snapshot.data;
+                    return SizedBox(
+                      width: 800,
+                      height: 350,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: systemVoteTheme
+                                .primaryColor, //new Color.fromRGBO(255, 0, 0, 0.0),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  SizedBox(
+                                    height: 150,
+                                    child: Text(
+                                      '${data[index].text}',
+                                      maxLines: 4,
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                        color: systemVoteTheme.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "Autor: '${data[index].author}'",
                                     style: TextStyle(
-                                      fontSize: 17,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                       color: systemVoteTheme.white,
                                     ),
                                   ),
-                                ),
-                                Text(
-                                  'Autor: ${snapshot.data[index]['author']}',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: systemVoteTheme.white,
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                });
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+                    );
+                  } else {
+                    return SizedBox(
+                      height: 500,
+                      child: Center(
+                        child: Text(
+                          "Não há posts para mostrar no momento",
+                          style: TextStyle(
+                              fontSize: 20.0, color: systemVoteTheme.white),
+                        ),
+                      ),
+                    );
+                  }
+              }
+            },
+          );
         },
       ),
     );

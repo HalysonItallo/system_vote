@@ -1,6 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:system_vote/app/models/entities/comment_model.dart';
+import 'package:system_vote/app/repository/comment_repository.dart';
 import 'package:system_vote/shared/themes/theme.dart';
 
 class CreateCommentPage extends StatefulWidget {
@@ -14,20 +15,7 @@ class CreateCommentPage extends StatefulWidget {
 class _CreateCommentPageState extends State<CreateCommentPage> {
   final TextEditingController _commentController = TextEditingController();
   final TextEditingController _authorController = TextEditingController();
-
-  Future<void> sendData() async {
-    var dio = Dio();
-
-    var response = await dio.post('http://10.0.2.2:3333/createComment', data: {
-      "idPost": Modular.args.queryParams['idPost'],
-      "text": _commentController.text,
-      "author": _authorController.text,
-    });
-    if (response.statusCode == 200) {
-      Modular.to
-          .navigate('/comment?idPost=${Modular.args.queryParams['idPost']}');
-    }
-  }
+  final CommentRepository commentRepository = Modular.get<CommentRepository>();
 
   @override
   Widget build(BuildContext context) {
@@ -131,8 +119,17 @@ class _CreateCommentPageState extends State<CreateCommentPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    onPressed: () {
-                      sendData();
+                    onPressed: () async {
+                      bool result = await commentRepository.createComment(
+                        widget.idPost!,
+                        CommentModel(
+                            author: _authorController.text,
+                            text: _commentController.text),
+                      );
+                      if (result) {
+                        Modular.to
+                            .navigate('/comment/?idPost=${widget.idPost}');
+                      }
                     },
                     child: const Text('Criar Comentário'),
                   )

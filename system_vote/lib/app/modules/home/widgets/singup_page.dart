@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:system_vote/app/models/entities/user_model.dart';
+import 'package:system_vote/app/repository/user_repository.dart';
 import 'package:system_vote/shared/themes/theme.dart';
 
 class SingUpPage extends StatefulWidget {
@@ -16,20 +18,7 @@ class _SingUpPageState extends State<SingUpPage> {
   final TextEditingController _nameController = TextEditingController();
 
   final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
-
-  Future<void> sendData() async {
-    var dio = Dio();
-
-    var response = await dio.post('http://10.0.2.2:3333/createUser', data: {
-      "name": _nameController.text,
-      "email": _emailController.text,
-      "password": _passwordController.text,
-    });
-    if (response.statusCode == 200) {
-      Modular.to.navigate('/login');
-    }
-  }
-
+  final UserRepository userRepository = Modular.get<UserRepository>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,8 +131,17 @@ class _SingUpPageState extends State<SingUpPage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        onPressed: () {
-                          sendData();
+                        onPressed: () async {
+                          bool result = await userRepository.createUser(
+                            UserModel(
+                              email: _emailController.text,
+                              name: _nameController.text,
+                              password: _passwordController.text,
+                            ),
+                          );
+                          if (result) {
+                            Modular.to.navigate('/');
+                          }
                         },
                         child: const Text('Cadastrar'),
                       ),

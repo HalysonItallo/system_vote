@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:system_vote/app/modules/home/widgets/singup_page.dart';
+import 'package:system_vote/app/repository/user_repository.dart';
 
 import '../home/home_store.dart';
 
@@ -9,6 +11,9 @@ class HomeModule extends Module {
   @override
   final List<Bind> binds = [
     Bind((i) => HomeStore()),
+    Bind(
+      (i) => UserRepository(i.get()),
+    ),
   ];
 
   @override
@@ -19,5 +24,11 @@ class HomeModule extends Module {
         key: UniqueKey(),
       ),
     ),
+    ChildRoute(
+      '/singup',
+      child: (_, args) => SingUpPage(
+        key: UniqueKey(),
+      ),
+    )
   ];
 }

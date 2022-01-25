@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:system_vote/app/components/post/post_store.dart';
+import 'package:system_vote/app/repository/post_repository.dart';
 import 'package:system_vote/shared/themes/theme.dart';
 
 class Post extends StatefulWidget {
@@ -25,10 +24,39 @@ class Post extends StatefulWidget {
   _PostState createState() => _PostState();
 }
 
-class _PostState extends ModularState<Post, PostStore> {
+class _PostState extends State<Post> {
+  final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
+  final PostRepository postRepository = Modular.get<PostRepository>();
+
+  bool _isLiked = false;
+  bool _isDisliked = false;
+
   @override
   Widget build(BuildContext context) {
-    final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
+    void _toggleLike() {
+      _isDisliked = false;
+      setState(() {
+        if (_isLiked) {
+          _isLiked = false;
+        } else {
+          _isLiked = true;
+          postRepository.addLike(widget.idPost);
+        }
+      });
+    }
+
+    void _toggleDislike() {
+      setState(() {
+        _isLiked = false;
+        if (_isDisliked) {
+          _isDisliked = false;
+        } else {
+          _isDisliked = true;
+          postRepository.addDislike(widget.idPost);
+        }
+      });
+    }
+
     return SizedBox(
       width: 800,
       height: 350,
@@ -36,7 +64,8 @@ class _PostState extends ModularState<Post, PostStore> {
         padding: const EdgeInsets.all(20),
         child: Container(
           decoration: BoxDecoration(
-            color: systemVoteTheme.black, //new Color.fromRGBO(255, 0, 0, 0.0),
+            color: systemVoteTheme
+                .primaryColor, //new Color.fromRGBO(255, 0, 0, 0.0),
             borderRadius: const BorderRadius.all(Radius.circular(20.0)),
           ),
           child: Center(
@@ -76,44 +105,42 @@ class _PostState extends ModularState<Post, PostStore> {
                       color: systemVoteTheme.white,
                     ),
                   ),
-                  Observer(builder: (context) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.thumb_up,
-                            color: store.isLiked ? Colors.green : Colors.white,
-                          ),
-                          tooltip: 'Like',
-                          onPressed: () {
-                            store.addLike(widget.idPost);
-                          },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.thumb_up,
+                          color: _isLiked ? Colors.green : Colors.white,
                         ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.thumb_down,
-                            color: store.isDisliked ? Colors.red : Colors.white,
-                          ),
-                          tooltip: 'Dislike',
-                          onPressed: () {
-                            store.addDislike(widget.idPost);
-                          },
+                        tooltip: 'Like',
+                        onPressed: () {
+                          _toggleLike();
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.thumb_down,
+                          color: _isDisliked ? Colors.red : Colors.white,
                         ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.comment,
-                            color: systemVoteTheme.white,
-                          ),
-                          tooltip: 'Comentário',
-                          onPressed: () {
-                            Modular.to
-                                .navigate('/comment?idPost=${widget.idPost}');
-                          },
+                        tooltip: 'Dislike',
+                        onPressed: () {
+                          _toggleDislike();
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.comment,
+                          color: systemVoteTheme.white,
                         ),
-                      ],
-                    );
-                  }),
+                        tooltip: 'Comentário',
+                        onPressed: () {
+                          Modular.to
+                              .navigate('/comment/?idPost=${widget.idPost}');
+                        },
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

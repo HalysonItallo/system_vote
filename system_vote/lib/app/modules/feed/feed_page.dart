@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:system_vote/app/components/post/post.dart';
-import 'package:http/http.dart' as http;
+import 'package:system_vote/app/components/post.dart';
+import 'package:system_vote/app/repository/post_repository.dart';
 import 'package:system_vote/shared/themes/theme.dart';
 
 import './feed_store.dart';
@@ -15,23 +14,12 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends ModularState<FeedPage, FeedStore> {
-  late Future _futureData;
-
-  @override
-  void initState() {
-    _futureData = getPosts();
-    super.initState();
-  }
-
-  Future<List> getPosts() async {
-    var url = Uri.parse('http://10.0.2.2:3333/getAllPosts');
-    var response = await http.get(url);
-    return jsonDecode(response.body);
-  }
+  final PostRepository postRepository = Modular.get<PostRepository>();
 
   @override
   Widget build(BuildContext context) {
     final SystemVoteTheme systemVoteTheme = Modular.get<SystemVoteTheme>();
+
     return Scaffold(
       backgroundColor: systemVoteTheme.black,
       appBar: AppBar(
@@ -48,7 +36,7 @@ class _FeedPageState extends ModularState<FeedPage, FeedStore> {
               color: systemVoteTheme.white,
             ),
             onPressed: () {
-              Modular.to.navigate('/my-topics');
+              Modular.to.navigate('/my-topics/');
             },
             tooltip: 'Meus tópicos',
           ),
@@ -58,7 +46,7 @@ class _FeedPageState extends ModularState<FeedPage, FeedStore> {
               color: systemVoteTheme.white,
             ),
             onPressed: () {
-              Modular.to.navigate('/my-favorites');
+              Modular.to.navigate('/my-favorites/');
             },
             tooltip: 'Meus favoritos',
           ),
@@ -67,40 +55,65 @@ class _FeedPageState extends ModularState<FeedPage, FeedStore> {
               Icons.exit_to_app,
               color: systemVoteTheme.white,
             ),
-            onPressed: () {
-              store.logout();
+            onPressed: () async {
+              await store.logout();
             },
             tooltip: 'Sair',
           ),
         ],
       ),
       body: FutureBuilder(
-        future: _futureData,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-                itemCount: snapshot.data?.length,
-                itemBuilder: (context, index) {
-                  return Post(
-                    text: snapshot.data[index]['text'],
-                    isMoreLikded: snapshot.data[index]['countLike'] >
-                            snapshot.data[index]['countDislike']
-                        ? true
-                        : false,
-                    author: snapshot.data[index]['author'],
-                    idPost: snapshot.data[index]['id'],
-                  );
-                });
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+        future: postRepository.getAllPosts(),
+        builder: (_, AsyncSnapshot snapshot) {
+          bool emptyData = snapshot.data.toString().compareTo("[]") == 0;
+
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+
+            case ConnectionState.active:
+
+            case ConnectionState.waiting:
+              return const SizedBox(
+                height: 400,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            case ConnectionState.done:
+              if (snapshot.hasData && !emptyData) {
+                var data = snapshot.data;
+                return ListView.builder(
+                  itemCount: data!.length,
+                  itemBuilder: (context, index) {
+                    return Post(
+                      text: data[index].text,
+                      isMoreLikded:
+                          data[index].countLike > data[index].countDislike
+                              ? true
+                              : false,
+                      author: data[index].author,
+                      idPost: data[index].id,
+                    );
+                  },
+                );
+              } else {
+                return SizedBox(
+                  height: 500,
+                  child: Center(
+                    child: Text(
+                      "Não há posts para mostrar no momento",
+                      style: TextStyle(
+                          fontSize: 20.0, color: systemVoteTheme.white),
+                    ),
+                  ),
+                );
+              }
           }
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Modular.to.navigate('/new-post');
+          Modular.to.navigate('/feed/new-post/');
         },
         tooltip: 'Adicionar Post',
         child: Icon(
